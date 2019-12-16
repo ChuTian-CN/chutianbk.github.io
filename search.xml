@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>使用L2TP拨号上网</title>
+      <link href="/2019/12/16/%E4%BD%BF%E7%94%A8%E7%AC%AC%E4%BA%8C%E6%AC%A1%E9%9A%A7%E9%81%93%E5%8D%8F%E8%AE%AE%E4%B8%8A%E7%BD%91/"/>
+      <url>/2019/12/16/%E4%BD%BF%E7%94%A8%E7%AC%AC%E4%BA%8C%E6%AC%A1%E9%9A%A7%E9%81%93%E5%8D%8F%E8%AE%AE%E4%B8%8A%E7%BD%91/</url>
+      
+        <content type="html"><![CDATA[<h2 id="什么是L2TP"><a href="#什么是L2TP" class="headerlink" title="什么是L2TP"></a>什么是L2TP</h2><p>​    L2TP是一种工业标准的Internet隧道协议，功能大致和PPTP协议类似，比如同样可以对网络数据流进行加密。不过也有不同之处，比如PPTP要求网络为IP网络，L2TP要求面向数据包的点对点连接；PPTP使用单一隧道，L2TP使用多隧道；L2TP提供包头压缩、隧道验证，而PPTP不支持。</p><h2 id="如何搭建IPsec-VPN"><a href="#如何搭建IPsec-VPN" class="headerlink" title="如何搭建IPsec VPN"></a>如何搭建IPsec VPN</h2><p>1.首先需要购买一个VPS服务器（必须要是linux的），我这里用的是VULTR的，操作系统装Ubuntu 和 Debian，或者CentOS.</p><p><img src="https://i.bmp.ovh/imgs/2019/12/658f5495ad257cab.png" alt></p><p>2.使用一键部署脚本</p><p>Ubuntu and Debian.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">wget https:&#x2F;&#x2F;git.io&#x2F;vpnsetup -O vpnsetup.sh &amp;&amp; sudo sh vpnsetup.sh</span></pre></td></tr></table></figure><p>CentOS.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">wget https:&#x2F;&#x2F;git.io&#x2F;vpnsetup-centos -O vpnsetup.sh &amp;&amp; sudo sh vpnsetup.sh</span></pre></td></tr></table></figure><p>慢慢等待自动部署。</p><p>成功后的效果图：</p><p><img src="https://i.bmp.ovh/imgs/2019/12/35df2bb229cb234b.png" alt></p><p>将后面4项全部复制出来保存好<code>Server IP:</code> <code>IPsec PSK:</code> <code>Username:</code> <code>Password:</code></p><h2 id="Windows设置VPN拨号"><a href="#Windows设置VPN拨号" class="headerlink" title="Windows设置VPN拨号"></a>Windows设置VPN拨号</h2><p>打开<code>网络和Internet设置</code>➡VPN➡添加VPN连接</p><p><img src="https://i.bmp.ovh/imgs/2019/12/c253f9a6128caba4.png" alt></p><p>接下来在VPN提供商选择<code>Windows内置</code>，VPN类型选择<code>使用预共享密钥的L2TP/IPsec</code>，然后连接名称随便填，服务器名称或地址填VPS的IP，密钥：<code>IPsec PSK:</code>,然后加上<code>username</code>和<code>password</code>.（就是上面保存的）。都填完后选择保存。</p><p><img src="https://i.bmp.ovh/imgs/2019/12/3aa6b642c85700fd.png" alt></p><p>接下来在右下角找到连接就可以拨号VPN了</p><p><img src="https://i.bmp.ovh/imgs/2019/12/4c267f6c7aaed118.png" alt></p><h2 id="连接问题"><a href="#连接问题" class="headerlink" title="连接问题"></a>连接问题</h2><p>第一次拨号可能会出现失败的情况，需要修改注册表解决</p><p>将下复制：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">Windows Registry Editor Version 5.00</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\RasMan\Parameters]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">&quot;ProhibitIpSec&quot;&#x3D;dword:00000000</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PolicyAgent]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">&quot;AssumeUDPEncapsulationContextOnSendRule&quot;&#x3D;dword:00000002</span></pre></td></tr></table></figure><p>放到记事本，并将后缀改为<code>.reg</code></p><p><img src="https://i.bmp.ovh/imgs/2019/12/e808e0b21d2d1305.png" alt></p><p>管理员权限运行，再次进行拨号就可拨上了</p><h2 id="成功连接"><a href="#成功连接" class="headerlink" title="成功连接"></a>成功连接</h2><p><img src="https://i.bmp.ovh/imgs/2019/12/ed82cb7e6849c0b8.png" alt></p><p>GitHub地址：<a href="https://github.com/hwdsl2/setup-ipsec-vpn/blob/master/README-zh.md" target="_blank" rel="noopener">https://github.com/hwdsl2/setup-ipsec-vpn/blob/master/README-zh.md</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 脚本 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>看我如何拿下BC站的服务器</title>
       <link href="/2019/12/10/01/"/>
       <url>/2019/12/10/01/</url>
